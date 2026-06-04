@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="3DGS2-TR project page.">
-  <meta name="keywords" content="3DGS2-TR, 3D Gaussian Splatting">
+        content="3DGS²-TR: Scalable Second-Order Trust-Region Method for 3D Gaussian Splatting.">
+  <meta name="keywords" content="3DGS2-TR, 3D Gaussian Splatting, second-order optimization">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3DGS2-TR</title>
+  <title>3DGS²-TR</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -53,20 +53,32 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">3DGS2-TR: Paper Title Here</h1>
+          <h1 class="title is-1 publication-title">3DGS<sup>2</sup>-TR: Scalable Second-Order Trust-Region Method for 3D Gaussian Splatting</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="#">Author One</a><sup>1</sup>,</span>
+              <a href="#">Roger Hsiao</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="#">Author Two</a><sup>1</sup>,</span>
+              <a href="#">Yuchen Fang</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="#">Author Three</a><sup>2</sup>
+              <a href="#">Xiangru Huang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="#">Ruilong Li</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="#">Hesam Rabeti</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="#">Zan Gojcic</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="#">Javad Lavaei</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="#">James Demmel</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="#">Sophia Shao</a><sup>1</sup>
             </span>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>Institution One,</span>
-            <span class="author-block"><sup>2</sup>Institution Two</span>
+            <span class="author-block"><sup>1</sup>UC Berkeley,</span>
+            <span class="author-block"><sup>2</sup>NVIDIA</span>
           </div>
 
           <div class="column has-text-centered">
@@ -114,7 +126,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Abstract placeholder. Describe your method here.
+            We propose 3DGS<sup>2</sup>-TR, a second-order optimizer for accelerating the scene training problem in 3D Gaussian Splatting (3DGS). Unlike existing second-order approaches that rely on explicit or dense curvature representations, such as 3DGS-LM (Höllein et al., 2025) or 3DGS2 (Lan et al., 2025), our method approximates curvature using only the diagonal of the Hessian matrix, efficiently via Hutchinson's method. Our approach is fully matrix-free and has the same complexity as ADAM (Kingma, 2024), O(n) in both computation and memory costs. To ensure stable optimization in the presence of strong nonlinearity in the 3DGS rasterization process, we introduce a parameter-wise trust-region technique based on the squared Hellinger distance, regularizing updates to Gaussian parameters. Under identical parameter initialization and without densification, 3DGS<sup>2</sup>-TR is able to achieve better reconstruction quality on standard datasets, using 50% fewer training iterations compared to ADAM, while incurring less than 1GB of peak GPU memory overhead (17% more than ADAM and 85% less than 3DGS-LM), enabling scalability to very large scenes and potentially to distributed training settings.
           </p>
         </div>
       </div>
@@ -126,10 +138,10 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{3dgs2tr2025,
-  author    = {Author One and Author Two and Author Three},
-  title     = {3DGS2-TR: Paper Title Here},
-  journal   = {Conference},
+    <pre><code>@article{hsiao20253dgs2tr,
+  author    = {Hsiao, Roger and Fang, Yuchen and Huang, Xiangru and Li, Ruilong and Rabeti, Hesam and Gojcic, Zan and Lavaei, Javad and Demmel, James and Shao, Sophia},
+  title     = {3DGS$^2$-TR: Scalable Second-Order Trust-Region Method for 3D Gaussian Splatting},
+  journal   = {arXiv preprint arXiv:2602.00395},
   year      = {2025},
 }</code></pre>
   </div>
