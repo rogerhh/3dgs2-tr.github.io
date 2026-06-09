@@ -153,31 +153,36 @@
 <section class="section">
   <div class="container is-max-desktop">
 
-    <!-- Row 1: Gaussian fitting -->
+    <!-- Row 1: Gaussian fitting with slider -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Description Placeholder</h2>
         <div class="content has-text-justified">
           <p>Caption placeholder for the Gaussian fitting figures.</p>
         </div>
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <img src="./static/images/gaussian_fitting_longside.gif" alt="Gaussian fitting longside" style="width: 100%;">
-            <p class="is-size-7">Longside</p>
-          </div>
-          <div class="column has-text-centered">
-            <img src="./static/images/gaussian_fitting_shortside.gif" alt="Gaussian fitting shortside" style="width: 100%;">
-            <p class="is-size-7">Shortside</p>
-          </div>
-          <div class="column has-text-centered">
-            <img src="./static/images/gaussian_fitting_rotation.gif" alt="Gaussian fitting rotation" style="width: 100%;">
-            <p class="is-size-7">Rotation</p>
-          </div>
-          <div class="column has-text-centered">
-            <img src="./static/images/gaussian_fitting_two_gaussians.gif" alt="Gaussian fitting two Gaussians" style="width: 100%;">
-            <p class="is-size-7">Two Gaussians</p>
-          </div>
+
+        <!-- GIF display -->
+        <div style="text-align: center;">
+          <img id="gaussian-gif-0" src="./static/images/gaussian_fitting_longside.gif"    alt="Longside"      style="width: 80%;">
+          <img id="gaussian-gif-1" src="./static/images/gaussian_fitting_shortside.gif"   alt="Shortside"     style="width: 80%; display: none;">
+          <img id="gaussian-gif-2" src="./static/images/gaussian_fitting_rotation.gif"    alt="Rotation"      style="width: 80%; display: none;">
+          <img id="gaussian-gif-3" src="./static/images/gaussian_fitting_two_gaussians.gif" alt="Two Gaussians" style="width: 80%; display: none;">
         </div>
+
+        <!-- Slider -->
+        <div style="margin-top: 1rem; padding: 0 10%;">
+          <input class="slider is-fullwidth is-large is-info"
+                 id="gaussian-slider" type="range" min="0" max="3" step="1" value="0">
+        </div>
+
+        <!-- Labels -->
+        <div class="columns is-mobile" style="padding: 0 8%;">
+          <div class="column has-text-centered"><span id="glabel-0" style="font-weight: bold;">Longside</span></div>
+          <div class="column has-text-centered"><span id="glabel-1">Shortside</span></div>
+          <div class="column has-text-centered"><span id="glabel-2">Rotation</span></div>
+          <div class="column has-text-centered"><span id="glabel-3">Two Gaussians</span></div>
+        </div>
+
       </div>
     </div>
     <!--/ Row 1 -->
@@ -190,7 +195,7 @@
           <p>Caption placeholder for the image fitting figure.</p>
         </div>
         <div class="columns is-centered">
-          <div class="column is-half has-text-centered">
+          <div class="column is-three-quarters has-text-centered">
             <img src="./static/images/image_fitting_picasso1_500x621.gif" alt="Image fitting Picasso" style="width: 100%;">
           </div>
         </div>
@@ -238,6 +243,22 @@
     </div>
   </div>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var slider = document.getElementById('gaussian-slider');
+    if (!slider) return;
+    var gifs   = [0,1,2,3].map(function(i){ return document.getElementById('gaussian-gif-' + i); });
+    var labels = [0,1,2,3].map(function(i){ return document.getElementById('glabel-' + i); });
+
+    function update(idx) {
+      gifs.forEach(function(g, i)   { g.style.display    = i === idx ? 'block' : 'none'; });
+      labels.forEach(function(l, i) { l.style.fontWeight = i === idx ? 'bold'  : 'normal'; });
+    }
+
+    slider.addEventListener('input', function () { update(parseInt(this.value)); });
+  });
+</script>
 
 </body>
 </html>
