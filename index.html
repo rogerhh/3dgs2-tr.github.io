@@ -182,8 +182,8 @@
             note that higher-order methods, such as Newton's Method, Gauss-Newton Method,
             Levenberg-Marquardt Method, make strong assumptions about the local smoothness of the
             loss function while also requiring the materialization of very large matrices given the
-            problem dimensions. Instead we follow the approach of adaHessian and SOPHIA, which
-            estimates the diagonal values of the Hessian matrix using Hutchinson's Method and uses
+            problem dimensions. Instead we follow the approach of AdaHessian (Yao et al., 2021) and SOPHIA (Liu et al., 2023), which
+            estimate the diagonal values of the Hessian matrix using Hutchinson's Method and use
             the diagonal values of the Hessian to condition the update step. Enabling Hutchinson's
             Method requires both the forward- and backward-mode autodiff of the 3DGS rasterization
             kernel. Our forward-mode autodiff library is implemented in-house based on dual numbers
@@ -343,7 +343,21 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{hsiao20253dgs2tr,
+    <pre><code>@article{yao2021adahessian,
+  author    = {Yao, Zhewei and Gholami, Amir and Shen, Sheng and Mustafa, Mustafa and Keutzer, Kurt and Mahoney, Michael W.},
+  title     = {{ADAHESSIAN}: An Adaptive Second Order Optimizer for Machine Learning},
+  booktitle = {AAAI},
+  year      = {2021},
+}
+
+@article{liu2023sophia,
+  author    = {Liu, Hong and Li, Zhiyuan and Hall, David and Liang, Percy and Ma, Tengyu},
+  title     = {Sophia: A Scalable Stochastic Second-order Optimizer for Language Model Pre-training},
+  journal   = {arXiv preprint arXiv:2305.14342},
+  year      = {2023},
+}
+
+@article{hsiao20253dgs2tr,
   author    = {Hsiao, Roger and Fang, Yuchen and Huang, Xiangru and Li, Ruilong and Rabeti, Hesam and Gojcic, Zan and Lavaei, Javad and Demmel, James and Shao, Sophia},
   title     = {3DGS$^2$-TR: Scalable Second-Order Trust-Region Method for 3D Gaussian Splatting},
   journal   = {arXiv preprint arXiv:2602.00395},
