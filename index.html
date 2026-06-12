@@ -25,6 +25,18 @@
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
+
+  <!-- MathJax -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
 
@@ -48,6 +60,7 @@
 </nav>
 
 
+<!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -87,12 +100,10 @@
 
           <div class="columns is-centered" style="margin-top: 1rem; margin-bottom: 0.5rem; align-items: center;">
             <div class="column is-narrow">
-              <img src="./static/images/ucberkeleylogo.png"
-                   alt="UC Berkeley" style="height: 3rem;">
+              <img src="./static/images/ucberkeleylogo.png" alt="UC Berkeley" style="height: 3rem;">
             </div>
             <div class="column is-narrow">
-              <img src="./static/images/slice_logo.png"
-                   alt="SLICE" style="height: 3rem;">
+              <img src="./static/images/slice_logo.png" alt="SLICE" style="height: 3rem;">
             </div>
           </div>
 
@@ -101,27 +112,21 @@
               <span class="link-block">
                 <a href="https://arxiv.org/pdf/2602.00395"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fas fa-file-pdf"></i>
-                  </span>
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
                   <span>Paper</span>
                 </a>
               </span>
               <span class="link-block">
                 <a href="https://arxiv.org/abs/2602.00395"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
                   <span>arXiv</span>
                 </a>
               </span>
               <span class="link-block">
                 <a href="https://github.com/rogerhh/3dgs2-tr"
                    class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fab fa-github"></i>
-                  </span>
+                  <span class="icon"><i class="fab fa-github"></i></span>
                   <span>Code</span>
                 </a>
               </span>
@@ -134,6 +139,7 @@
 </section>
 
 
+<!-- ===== ABSTRACT ===== -->
 <section class="section">
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
@@ -141,7 +147,20 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            We propose 3DGS<sup>2</sup>-TR, a second-order optimizer for accelerating the scene training problem in 3D Gaussian Splatting (3DGS). Unlike existing second-order approaches that rely on explicit or dense curvature representations, such as 3DGS-LM (Höllein et al., 2025) or 3DGS2 (Lan et al., 2025), our method approximates curvature using only the diagonal of the Hessian matrix, efficiently via Hutchinson's method. Our approach is fully matrix-free and has the same complexity as ADAM (Kingma, 2024), O(n) in both computation and memory costs. To ensure stable optimization in the presence of strong nonlinearity in the 3DGS rasterization process, we introduce a parameter-wise trust-region technique based on the squared Hellinger distance, regularizing updates to Gaussian parameters. Under identical parameter initialization and without densification, 3DGS<sup>2</sup>-TR is able to achieve better reconstruction quality on standard datasets, using 50% fewer training iterations compared to ADAM, while incurring less than 1GB of peak GPU memory overhead (17% more than ADAM and 85% less than 3DGS-LM), enabling scalability to very large scenes and potentially to distributed training settings.
+            We propose 3DGS<sup>2</sup>-TR, a second-order optimizer for accelerating the scene
+            training problem in 3D Gaussian Splatting (3DGS). Unlike existing second-order approaches
+            that rely on explicit or dense curvature representations, such as 3DGS-LM (Höllein et
+            al., 2025) or 3DGS2 (Lan et al., 2025), our method approximates curvature using only
+            the diagonal of the Hessian matrix, efficiently via Hutchinson's method. Our approach is
+            fully matrix-free and has the same complexity as ADAM (Kingma, 2024), O(n) in both
+            computation and memory costs. To ensure stable optimization in the presence of strong
+            nonlinearity in the 3DGS rasterization process, we introduce a parameter-wise
+            trust-region technique based on the squared Hellinger distance, regularizing updates to
+            Gaussian parameters. Under identical parameter initialization and without densification,
+            3DGS<sup>2</sup>-TR is able to achieve better reconstruction quality on standard datasets,
+            using 50% fewer training iterations compared to ADAM, while incurring less than 1GB of
+            peak GPU memory overhead (17% more than ADAM and 85% less than 3DGS-LM), enabling
+            scalability to very large scenes and potentially to distributed training settings.
           </p>
         </div>
       </div>
@@ -150,23 +169,96 @@
 </section>
 
 
+<!-- ===== SECOND ORDER OPTIMIZER ===== -->
 <section class="section">
   <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Second Order Optimizer</h2>
+        <div class="content has-text-justified">
+          <p>
+            The 3DGS scene training problem can be formulated as an optimization problem. SOTA
+            methods use first-order methods such as ADAM, which may have a slower convergence. We
+            note that higher-order methods, such as Newton's Method, Gauss-Newton Method,
+            Levenberg-Marquardt Method, make strong assumptions about the local smoothness of the
+            loss function while also requiring the materialization of very large matrices given the
+            problem dimensions. Instead we follow the approach of adaHessian and SOPHIA, which
+            estimates the diagonal values of the Hessian matrix using Hutchinson's Method and uses
+            the diagonal values of the Hessian to condition the update step. Enabling Hutchinson's
+            Method requires both the forward- and backward-mode autodiff of the 3DGS rasterization
+            kernel. Our forward-mode autodiff library is implemented in-house based on dual numbers
+            using CUDA templating.
+          </p>
+        </div>
+        <div class="has-text-centered">
+          <img src="./static/images/algo.png" alt="Algorithm" style="width: 80%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Row 1: Gaussian fitting with slider -->
+
+<!-- ===== SQUARED HELLINGER DISTANCE TRUST REGION ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Squared Hellinger Distance Trust Region</h2>
+        <div class="content has-text-justified">
+          <p>
+            We found that for some Gaussian parameters, the diagonal estimation can be off due to
+            high variance, which may cause the updates to be unstable. We propose to use a
+            data-aware trust-region method to bound the update to each Gaussian splat. Consider a
+            single Gaussian splat before and after the update step, the distance of the update step
+            can be measured by the statistical distance using the squared Hellinger distance. (The
+            squared Hellinger distance is chosen because it is able to handle the unnormalized
+            probability mass of a Gaussian.)
+          </p>
+          <p>
+            \[
+              \begin{align*}
+                H^2(G,G') &= \frac{1}{2}(Z+Z') \\
+                &\quad - (Z\cdot Z')^{\frac{1}{2}} \cdot \Sigma_1 \cdot
+                  \exp\!\left(-\frac{\Delta\mu^T \Sigma_2^{-1} \Delta\mu}{8}\right),
+              \end{align*}
+            \]
+            where $\Delta\mu = \mu - \mu'$,
+            $\Sigma_1 = \dfrac{\det(\Sigma)^{\frac{1}{4}}\det(\Sigma')^{\frac{1}{4}}}
+                               {\det\!\left(\dfrac{\Sigma+\Sigma'}{2}\right)^{\frac{1}{2}}}$,
+            and $\Sigma_2 = \dfrac{\Sigma+\Sigma'}{2}$.
+          </p>
+          <p>A more intuitive interpretation is illustrated below.</p>
+        </div>
+        <div class="has-text-centered">
+          <img src="./static/images/tr_illustration.png" alt="Trust region illustration" style="width: 80%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== GAUSSIAN FITTING EXAMPLE ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Description Placeholder</h2>
+        <h2 class="title is-3">Gaussian Fitting Example</h2>
         <div class="content has-text-justified">
           <p>Caption placeholder for the Gaussian fitting figures.</p>
         </div>
 
         <!-- GIF display -->
         <div style="text-align: center;">
-          <img id="gaussian-gif-0" src="./static/images/gaussian_fitting_longside.gif"    alt="Longside"      style="width: 80%;">
-          <img id="gaussian-gif-1" src="./static/images/gaussian_fitting_shortside.gif"   alt="Shortside"     style="width: 80%; display: none;">
-          <img id="gaussian-gif-2" src="./static/images/gaussian_fitting_rotation.gif"    alt="Rotation"      style="width: 80%; display: none;">
-          <img id="gaussian-gif-3" src="./static/images/gaussian_fitting_two_gaussians.gif" alt="Two Gaussians" style="width: 80%; display: none;">
+          <img id="gaussian-gif-0" src="./static/images/gaussian_fitting_longside.gif"
+               alt="Longside" style="width: 80%;">
+          <img id="gaussian-gif-1" src="./static/images/gaussian_fitting_shortside.gif"
+               alt="Shortside" style="width: 80%; display: none;">
+          <img id="gaussian-gif-2" src="./static/images/gaussian_fitting_rotation.gif"
+               alt="Rotation" style="width: 80%; display: none;">
+          <img id="gaussian-gif-3" src="./static/images/gaussian_fitting_two_gaussians.gif"
+               alt="Two Gaussians" style="width: 80%; display: none;">
         </div>
 
         <!-- Slider -->
@@ -185,28 +277,71 @@
 
       </div>
     </div>
-    <!--/ Row 1 -->
+  </div>
+</section>
 
-    <!-- Row 2: Image fitting -->
-    <div class="columns is-centered has-text-centered" style="margin-top: 2rem;">
+
+<!-- ===== IMAGE FITTING EXAMPLE ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Description Placeholder</h2>
+        <h2 class="title is-3">Image Fitting Example</h2>
         <div class="content has-text-justified">
           <p>Caption placeholder for the image fitting figure.</p>
         </div>
         <div class="columns is-centered">
           <div class="column is-three-quarters has-text-centered">
-            <img src="./static/images/image_fitting_picasso1_500x621.gif" alt="Image fitting Picasso" style="width: 100%;">
+            <img src="./static/images/image_fitting_picasso1_500x621.gif"
+                 alt="Image fitting Picasso" style="width: 100%;">
           </div>
         </div>
       </div>
     </div>
-    <!--/ Row 2 -->
-
   </div>
 </section>
 
 
+<!-- ===== 3D SCENE TRAINING EXAMPLE ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">3D Scene Training Example</h2>
+        <div class="content has-text-justified">
+          <p>To be added.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== RESULTS AND CONCLUSION ===== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results and Conclusion</h2>
+        <div class="content has-text-justified">
+          <p>
+            We are able to achieve 2–4× speedup in terms of training iterations compared to ADAM,
+            while incurring a 10% overhead from the diagonal estimation and only a 1GB GPU memory
+            overhead. We will, however, note the following caveats: 1) the current implementation
+            is not optimized, 2) densification is supported but does not work well with second-order
+            methods. These are areas that we are actively improving.
+          </p>
+        </div>
+        <div class="has-text-centered">
+          <img src="./static/images/results_table.png" alt="Results table" style="width: 100%;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== BIBTEX ===== -->
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
@@ -223,7 +358,7 @@
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
-      <a class="icon-link" href="https://github.com/3dgs2-tr" class="external-link">
+      <a class="icon-link" href="https://github.com/rogerhh/3dgs2-tr" class="external-link">
         <i class="fab fa-github"></i>
       </a>
     </div>
